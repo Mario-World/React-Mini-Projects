@@ -1,8 +1,9 @@
 import React, { useState } from "react";
-import "./App.css"; // optional if you want to style
+import "./App.css";
 
-const XModal = () => {
+function App() {
   const [open, setOpen] = useState(false);
+
   const [formData, setFormData] = useState({
     username: "",
     email: "",
@@ -11,13 +12,17 @@ const XModal = () => {
   });
 
   const openModal = () => setOpen(true);
-
   const closeModal = () => {
     setOpen(false);
-    setFormData({ username: "", email: "", phone: "", dob: "" });
+    setFormData({
+      username: "",
+      email: "",
+      phone: "",
+      dob: ""
+    });
   };
 
-  const handleClickOutside = (e) => {
+  const handleOutsideClick = (e) => {
     if (e.target.className === "modal") {
       closeModal();
     }
@@ -26,107 +31,104 @@ const XModal = () => {
   const handleSubmit = () => {
     const { username, email, phone, dob } = formData;
 
-    // Empty field validations:
+    // Validate Username
     if (!username) {
       alert("Please enter Username.");
       return;
     }
+
+    // Validate Email
     if (!email) {
       alert("Please enter Email.");
       return;
     }
-    if (!phone) {
-      alert("Please enter Phone Number.");
-      return;
-    }
-    if (!dob) {
-      alert("Please enter Date of Birth.");
-      return;
-    }
-
-    // Email validation
     if (!email.includes("@")) {
       alert("Invalid email. Please check your email address.");
       return;
     }
 
-    // Phone validation (10 digits)
+    // Validate Phone
+    if (!phone) {
+      alert("Please enter Phone Number.");
+      return;
+    }
     if (!/^\d{10}$/.test(phone)) {
       alert("Invalid phone number. Please enter a 10-digit phone number.");
       return;
     }
 
-    // DOB validation (must not be future date)
+    // Validate Date of Birth
+    if (!dob) {
+      alert("Please enter Date of Birth.");
+      return;
+    }
     const today = new Date();
-    const enteredDate = new Date(dob);
+    const entered = new Date(dob);
 
-    if (enteredDate > today) {
+    if (entered > today) {
       alert("Invalid date of birth. Date cannot be in the future.");
       return;
     }
 
-    // If all correct
+    // Success → reset UI
     closeModal();
   };
 
   return (
     <div className="app">
-    <h1>User Details Modal</h1>
+     <h1>User Details Modal</h1>
       {!open && (
-        <button className="modal-open" onClick={openModal}>Open Form</button>
+        <button className ="modal-open" onClick={openModal}>Open Form</button>
       )}
 
       {open && (
-        <div className="modal" onClick={handleClickOutside}>
+        <div className="modal" onClick={handleOutsideClick}>
           <div className="modal-content">
-            <h2>Fill Details</h2>
+            <h2>Form</h2>
 
-            <label>Username:</label>
-            <input
-              id="username"
-              type="text"
-              value={formData.username}
-              onChange={(e) =>
-                setFormData({ ...formData, username: e.target.value })
-              }
-            />
+            <form>
+              <label>Username:</label>
+              <input
+                id="username"
+                type="text"
+                value={formData.username}
+                onChange={(e) =>
+                  setFormData({ ...formData, username: e.target.value })
+                }
+              />
 
-            <label>Email:</label>
-            <input
-              id="email"
-              type="text"
-              value={formData.email}
-              onChange={(e) =>
-                setFormData({ ...formData, email: e.target.value })
-              }
-            />
+              <label>Email:</label>
+              <input
+                id="email"
+                type="text"
+                value={formData.email}
+                onChange={(e) =>
+                  setFormData({ ...formData, email: e.target.value })
+                }
+              />
 
-            <label>Phone Number:</label>
-            <input
-              id="phone"
-              type="text"
-              value={formData.phone}
-              onChange={(e) =>
-                setFormData({ ...formData, phone: e.target.value })
-              }
-            />
+              <label>Phone Number:</label>
+              <input
+                id="phone"
+                type="text"
+                value={formData.phone}
+                onChange={(e) =>
+                  setFormData({ ...formData, phone: e.target.value })
+                }
+              />
 
-            <label>Date of Birth:</label>
-            <input
-              id="dob"
-              type="date"
-              value={formData.dob}
-              onChange={(e) =>
-                setFormData({ ...formData, dob: e.target.value })
-              }
-            />
+              <label>Date of Birth:</label>
+              <input
+                id="dob"
+                type="date"
+                value={formData.dob}
+                onChange={(e) =>
+                  setFormData({ ...formData, dob: e.target.value })
+                }
+              />
+            </form>
 
-            <br /><br />
-
-            <button
-              className="submit-button"
-              onClick={handleSubmit}
-            >
+            <button className="submit-button" onClick={handleSubmit}>
               Submit
             </button>
           </div>
@@ -134,6 +136,6 @@ const XModal = () => {
       )}
     </div>
   );
-};
+}
 
-export default XModal;
+export default App;
