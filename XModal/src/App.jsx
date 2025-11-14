@@ -13,16 +13,10 @@ function App() {
 
   const openModal = () => setOpen(true);
 
+  // CLOSE ONLY ON SUCCESS
   const closeModal = () => {
     setOpen(false);
     setFormData({ username: "", email: "", phone: "", dob: "" });
-  };
-
-  // Prevent Cypress artificial clicks from closing modal
-  const handleOutsideClick = (e) => {
-    if (e.target.classList.contains("modal") && e.clientX !== 0 && e.clientY !== 0) {
-      closeModal();
-    }
   };
 
   // EMAIL validation
@@ -37,13 +31,11 @@ function App() {
     return pattern.test(phone);
   };
 
-  // DOB validation — must not be empty & must be a valid date
+  // DOB validation
   const validateDOB = (dob) => {
     const today = new Date();
     const date = new Date(dob);
-
-    if (date > today) return false;
-    return true;
+    return date <= today;
   };
 
   const handleSubmit = (e) => {
@@ -51,7 +43,7 @@ function App() {
 
     const { username, email, phone, dob } = formData;
 
-    // USERNAME empty
+    // USERNAME empty → must alert
     if (!username.trim()) {
       alert("Please enter Username.");
       return;
@@ -75,7 +67,7 @@ function App() {
       return;
     }
 
-    // PHONE invalid
+    // PHONE invalid (exact 10 digits)
     if (!validatePhoneNumber(phone)) {
       alert("Invalid phone number. Please enter a 10-digit phone number.");
       return;
@@ -87,9 +79,8 @@ function App() {
       return;
     }
 
-    // DOB invalid
+    // DOB invalid → NOTE requires same as phone error message
     if (!validateDOB(dob)) {
-      // NOTE requires SAME MESSAGE as phone invalid
       alert("Invalid phone number. Please enter a 10-digit phone number.");
       return;
     }
@@ -100,14 +91,14 @@ function App() {
 
   return (
     <div className="app">
-      <h1>Date and Views Table</h1>
+      <h2>User Details Modal</h2>
 
       {!open && (
         <button onClick={openModal}>Open Form</button>
       )}
 
       {open && (
-        <div className="modal" onClick={handleOutsideClick}>
+        <div className="modal">
           <div className="modal-content">
 
             <h2>Fill Details</h2>
@@ -119,7 +110,9 @@ function App() {
                 id="username"
                 type="text"
                 value={formData.username}
-                onChange={(e) => setFormData({ ...formData, username: e.target.value })}
+                onChange={(e) =>
+                  setFormData({ ...formData, username: e.target.value })
+                }
               />
 
               <label htmlFor="email">Email:</label>
@@ -127,7 +120,9 @@ function App() {
                 id="email"
                 type="text"
                 value={formData.email}
-                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                onChange={(e) =>
+                  setFormData({ ...formData, email: e.target.value })
+                }
               />
 
               <label htmlFor="phone">Phone Number:</label>
@@ -135,7 +130,9 @@ function App() {
                 id="phone"
                 type="text"
                 value={formData.phone}
-                onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                onChange={(e) =>
+                  setFormData({ ...formData, phone: e.target.value })
+                }
               />
 
               <label htmlFor="dob">Date of Birth:</label>
@@ -143,10 +140,14 @@ function App() {
                 id="dob"
                 type="date"
                 value={formData.dob}
-                onChange={(e) => setFormData({ ...formData, dob: e.target.value })}
+                onChange={(e) =>
+                  setFormData({ ...formData, dob: e.target.value })
+                }
               />
 
-              <button className="submit-button" type="submit">Submit</button>
+              <button className="submit-button" type="submit">
+                Submit
+              </button>
 
             </form>
 
