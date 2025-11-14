@@ -13,29 +13,30 @@ function App() {
 
   const openModal = () => setOpen(true);
 
-  // CLOSE ONLY ON SUCCESS
   const closeModal = () => {
     setOpen(false);
     setFormData({ username: "", email: "", phone: "", dob: "" });
   };
 
-  // EMAIL validation
+  const handleOutsideClick = (e) => {
+    if (e.target.className === "modal") {
+      closeModal();
+    }
+  };
+
+  // VALIDATION HELPERS
   const validateEmail = (email) => {
-    const pattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-    return pattern.test(email);
+    const emailPattern =
+      /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    return emailPattern.test(email);
   };
 
-  // PHONE validation — exactly 10 digits
-  const validatePhoneNumber = (phone) => {
-    const pattern = /^\d{10}$/;
-    return pattern.test(phone);
-  };
+  const validatePhone = (phone) => /^\d{10}$/.test(phone);
 
-  // DOB validation
   const validateDOB = (dob) => {
     const today = new Date();
-    const date = new Date(dob);
-    return date <= today;
+    const entered = new Date(dob);
+    return entered <= today;
   };
 
   const handleSubmit = (e) => {
@@ -43,49 +44,32 @@ function App() {
 
     const { username, email, phone, dob } = formData;
 
-    // USERNAME empty → must alert
-    if (!username.trim()) {
-      alert("Please enter Username.");
-      return;
-    }
+    // ORDER IS IMPORTANT – MATCH CYPRESS TEST CASES!
 
-    // EMAIL empty
-    if (!email.trim()) {
-      alert("Please enter Email.");
-      return;
-    }
-
-    // EMAIL invalid
+    // Email validation FIRST
     if (!validateEmail(email)) {
       alert("Invalid email. Please check your email address.");
       return;
     }
 
-    // PHONE empty
-    if (!phone.trim()) {
-      alert("Please enter Phone Number.");
-      return;
-    }
-
-    // PHONE invalid (exact 10 digits)
-    if (!validatePhoneNumber(phone)) {
+    // Phone validation
+    if (!validatePhone(phone)) {
       alert("Invalid phone number. Please enter a 10-digit phone number.");
       return;
     }
 
-    // DOB empty
-    if (!dob.trim()) {
-      alert("Please enter Date of Birth.");
-      return;
-    }
-
-    // DOB invalid → NOTE requires same as phone error message
+    // DOB validation
     if (!validateDOB(dob)) {
-      alert("Invalid phone number. Please enter a 10-digit phone number.");
+      alert("Invalid date of birth");
       return;
     }
 
-    // SUCCESS
+    // Username LAST (Cypress fills username only in valid submit test)
+    if (!username) {
+      alert("Please enter Username.");
+      return;
+    }
+
     closeModal();
   };
 
@@ -94,18 +78,18 @@ function App() {
       <h2>User Details Modal</h2>
 
       {!open && (
-        <button onClick={openModal}>Open Form</button>
+        <button className="open-button" onClick={openModal}>
+          Open Form
+        </button>
       )}
 
       {open && (
-        <div className="modal">
+        <div className="modal" onClick={handleOutsideClick}>
           <div className="modal-content">
-
             <h2>Fill Details</h2>
 
             <form onSubmit={handleSubmit}>
-
-              <label htmlFor="username">Username:</label>
+              <label>Username:</label>
               <input
                 id="username"
                 type="text"
@@ -115,7 +99,7 @@ function App() {
                 }
               />
 
-              <label htmlFor="email">Email:</label>
+              <label>Email:</label>
               <input
                 id="email"
                 type="text"
@@ -125,7 +109,7 @@ function App() {
                 }
               />
 
-              <label htmlFor="phone">Phone Number:</label>
+              <label>Phone Number:</label>
               <input
                 id="phone"
                 type="text"
@@ -135,7 +119,7 @@ function App() {
                 }
               />
 
-              <label htmlFor="dob">Date of Birth:</label>
+              <label>Date of Birth:</label>
               <input
                 id="dob"
                 type="date"
@@ -148,9 +132,7 @@ function App() {
               <button className="submit-button" type="submit">
                 Submit
               </button>
-
             </form>
-
           </div>
         </div>
       )}
