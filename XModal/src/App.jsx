@@ -14,8 +14,8 @@ function App() {
   const openModal = () => setOpen(true);
 
   const closeModal = () => {
+    // Do NOT reset form here (Cypress error fix)
     setOpen(false);
-    setFormData({ username: "", email: "", phone: "", dob: "" });
   };
 
   const handleOutsideClick = (e) => {
@@ -29,25 +29,24 @@ function App() {
 
     const { username, email, phone, dob } = formData;
 
-    // USERNAME VALIDATION
+    // USERNAME
     if (!username.trim()) {
       alert("Please enter Username.");
       return;
     }
 
-    // EMAIL VALIDATION
+    // EMAIL
     if (!email.trim()) {
       alert("Please enter Email.");
       return;
     }
 
-    // custom validation, no browser validation allowed
     if (!email.includes("@")) {
       alert("Invalid email. Please check your email address.");
       return;
     }
 
-    // PHONE VALIDATION
+    // PHONE NUMBER
     if (!phone.trim()) {
       alert("Please enter Phone Number.");
       return;
@@ -58,7 +57,7 @@ function App() {
       return;
     }
 
-    // DATE VALIDATION
+    // DATE OF BIRTH
     if (!dob.trim()) {
       alert("Please enter Date of Birth.");
       return;
@@ -68,17 +67,19 @@ function App() {
     const entered = new Date(dob);
 
     if (entered > today) {
-      alert("Invalid date of birth. Date cannot be in the future.");
+      alert("Invalid date of birth.");
       return;
     }
 
-    // SUCCESS → reset & close modal
+    // SUCCESS — Reset form ONLY after submit
+    setFormData({ username: "", email: "", phone: "", dob: "" });
     closeModal();
   };
 
   return (
     <div className="app">
-      <h1>User Details Modal</h1>
+
+      <h2>User Details Modal</h2>
 
       {!open && (
         <button className="modal-open" onClick={openModal}>
@@ -89,10 +90,11 @@ function App() {
       {open && (
         <div className="modal" onClick={handleOutsideClick}>
           <div className="modal-content">
+
             <h2>Fill Details</h2>
 
-            {/* Disable native HTML validation */}
-            <form onSubmit={handleSubmit} noValidate>
+            <form onSubmit={handleSubmit}>
+
               <label htmlFor="username">Username:</label>
               <input
                 id="username"
@@ -133,10 +135,12 @@ function App() {
                 }
               />
 
-              <button className="submit-button" type="submit">
+              <button type="submit" className="submit-button" style={{ marginTop: "15px" }}>
                 Submit
               </button>
+
             </form>
+
           </div>
         </div>
       )}
