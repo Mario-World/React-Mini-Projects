@@ -15,7 +15,12 @@ function App() {
 
   const closeModal = () => {
     setOpen(false);
-    setFormData({ username: "", email: "", phone: "", dob: "" });
+    setFormData({
+      username: "",
+      email: "",
+      phone: "",
+      dob: ""
+    });
   };
 
   const handleOutsideClick = (e) => {
@@ -24,52 +29,51 @@ function App() {
     }
   };
 
-  // VALIDATION HELPERS
-  const validateEmail = (email) => {
-    const emailPattern =
-      /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-    return emailPattern.test(email);
-  };
-
-  const validatePhone = (phone) => /^\d{10}$/.test(phone);
-
-  const validateDOB = (dob) => {
-    const today = new Date();
-    const entered = new Date(dob);
-    return entered <= today;
-  };
-
   const handleSubmit = (e) => {
     e.preventDefault();
 
     const { username, email, phone, dob } = formData;
 
-    // ORDER IS IMPORTANT – MATCH CYPRESS TEST CASES!
-
-    // Email validation FIRST
-    if (!validateEmail(email)) {
-      alert("Invalid email. Please check your email address.");
-      return;
-    }
-
-    // Phone validation
-    if (!validatePhone(phone)) {
-      alert("Invalid phone number. Please enter a 10-digit phone number.");
-      return;
-    }
-
-    // DOB validation
-    if (!validateDOB(dob)) {
-      alert("Invalid date of birth");
-      return;
-    }
-
-    // Username LAST (Cypress fills username only in valid submit test)
+    // Required field validations
     if (!username) {
       alert("Please enter Username.");
       return;
     }
+    if (!email) {
+      alert("Please enter Email.");
+      return;
+    }
+    if (!phone) {
+      alert("Please enter Phone Number.");
+      return;
+    }
+    if (!dob) {
+      alert("Please enter Date of Birth.");
+      return;
+    }
 
+    // Email validation
+    if (!email.includes("@")) {
+      alert("Invalid email. Please check your email address.");
+      return;
+    }
+
+    // 10-digit phone validation
+    if (!/^\d{10}$/.test(phone)) {
+      alert("Invalid phone number. Please enter a 10-digit phone number.");
+      return;
+    }
+
+    // DOB must not be a future date
+    const today = new Date();
+    const entered = new Date(dob);
+
+    if (entered > today) {
+      alert("Invalid phone number. Please enter a 10-digit phone number.");
+      return;
+    }
+
+    // Success → reset everything
     closeModal();
   };
 
@@ -78,7 +82,7 @@ function App() {
       <h2>User Details Modal</h2>
 
       {!open && (
-        <button className="open-button" onClick={openModal}>
+        <button className="open-btn" onClick={openModal}>
           Open Form
         </button>
       )}
@@ -129,7 +133,7 @@ function App() {
                 }
               />
 
-              <button className="submit-button" type="submit">
+              <button type="submit" className="submit-button">
                 Submit
               </button>
             </form>

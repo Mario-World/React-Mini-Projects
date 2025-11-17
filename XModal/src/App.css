@@ -1,17 +1,17 @@
 .app {
   text-align: center;
   margin-top: 30px;
-  font-family: Arial;
+  font-family: Arial, sans-serif;
 }
 
-.open-button {
+.open-btn {
   padding: 10px 22px;
-  font-size: 16px;
-  background: #0056ff;
+  background: #0062ff;
   border: none;
-  border-radius: 25px;
   color: white;
+  border-radius: 20px;
   cursor: pointer;
+  font-size: 16px;
 }
 
 .modal {
@@ -26,18 +26,18 @@
 .modal-content {
   background: white;
   padding: 25px;
-  width: 380px;
+  width: 400px;
   border-radius: 10px;
-  box-shadow: 0 0 15px rgba(0,0,0,0.3);
+  text-align: left;
 }
 
 .modal-content h2 {
+  text-align: center;
   margin-bottom: 20px;
 }
 
 label {
   display: block;
-  text-align: left;
   margin-top: 10px;
   margin-bottom: 5px;
 }
@@ -45,18 +45,18 @@ label {
 input {
   width: 100%;
   padding: 10px;
-  border: 1px solid #ccc;
+  border: 1px solid #bbb;
   border-radius: 6px;
+  margin-bottom: 10px;
 }
 
 .submit-button {
   width: 100%;
-  padding: 10px;
-  margin-top: 18px;
-  font-size: 16px;
+  padding: 12px;
+  background-color: #0056ff;
   border: none;
-  border-radius: 25px;
-  background-color: #0066ff;
   color: white;
   cursor: pointer;
+  border-radius: 20px;
+  font-size: 16px;
 }
