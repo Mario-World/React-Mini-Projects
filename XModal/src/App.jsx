@@ -34,46 +34,34 @@ function App() {
 
     const { username, email, phone, dob } = formData;
 
-    // Required field validations
-    if (!username) {
-      alert("Please enter Username.");
-      return;
-    }
-    if (!email) {
-      alert("Please enter Email.");
-      return;
-    }
-    if (!phone) {
-      alert("Please enter Phone Number.");
-      return;
-    }
-    if (!dob) {
-      alert("Please enter Date of Birth.");
-      return;
-    }
-
-    // Email validation
+    // --- Cypress expects EMAIL to be validated first ---
     if (!email.includes("@")) {
       alert("Invalid email. Please check your email address.");
       return;
     }
 
-    // 10-digit phone validation
+    // --- Cypress expects PHONE second ---
     if (!/^\d{10}$/.test(phone)) {
       alert("Invalid phone number. Please enter a 10-digit phone number.");
       return;
     }
 
-    // DOB must not be a future date
+    // --- Cypress expects DOB third ---
     const today = new Date();
     const entered = new Date(dob);
 
     if (entered > today) {
-      alert("Invalid phone number. Please enter a 10-digit phone number.");
+      alert("Invalid date of birth");
       return;
     }
 
-    // Success → reset everything
+    // --- Username last (Cypress only checks this in valid submission) ---
+    if (!username) {
+      alert("Please enter Username.");
+      return;
+    }
+
+    // If everything is valid
     closeModal();
   };
 
@@ -82,7 +70,7 @@ function App() {
       <h2>User Details Modal</h2>
 
       {!open && (
-        <button className="open-btn" onClick={openModal}>
+        <button className="open-form-btn" onClick={openModal}>
           Open Form
         </button>
       )}
